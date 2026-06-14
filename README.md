@@ -9,3 +9,9 @@ Applies Principal Component Analysis(PCA)
 
 quantum_model_datareuploading is the VQC training code
 This is VQC model implemented with datareuploading so I can encode more features than my qubits 
+
+classical_model.py
+This is the classical model for my project. It is an XGBoost model.
+
+quantum_data_reupload.py
+This file is for measuring accuracy and ROC AUC values of a model after running quantum_model_datareuploading.py
