@@ -44,24 +44,15 @@ def feature_encoding(finger):
 @qml.qnode(dev, interface='autograd')
 def variational_circuit(params, x):
     x_chunks = [] 
-    for i in range(0, len(x), 5):
+    for i in range(0, len(x), 5): # partitioning the latent vector
         x_chunks.append(x[i:i+6])
-    # params shape: (num_layers, n_qubits, 3)
-    # Each qubit in each layer has 3 parameters for RX, RY, and RZ rotations
+    # params shape: (num_layers, n_qubits)
     for i_layer, layer_params in enumerate(params):
-        qml.AngleEmbedding(features=x_chunks[i_layer % len(x_chunks)], wires=range(n_qubits), rotation='Y')
-        for i, wire_params in enumerate(layer_params):
-            qml.RX(wire_params, wires=i)
-            #qml.RY(wire_params[1], wires=i)
-            #qml.RZ(wire_params[2], wires=i)
-        for s in range(n_qubits-1):
-            
-       # Entangle the qubits with CNOT gates
+        qml.AngleEmbedding(features=x_chunks[i_layer % len(x_chunks)], wires=range(n_qubits), rotation='Y')# encoding 
+        for i, wire_params in enumerate(layer_params): # rotation
+            qml.RY(wire_params, wires=i)
+        for s in range(n_qubits-1): # entangling
             qml.CNOT(wires=[s, s+1])
-        #for i in range(n_qubits - 1):
-        #   qml.CNOT(wires=[i, i+1])
-    
-    #print("---------------------------AAAAAAAAAAAAAAAAAAAAHHHHHHHHHHH------------")
     # Measure expectation value of Pauli-Z on the first qubit
     return qml.expval(H)
 
