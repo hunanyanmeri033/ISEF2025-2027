@@ -4,7 +4,7 @@ from pennylane import numpy as np
 from sklearn.metrics import f1_score
 from sklearn.metrics import roc_auc_score
 
-params = np.load("../models/quantum_params.npy", allow_pickle=True)
+params = np.load("/workspaces/ISEF2025-2027/models/quantum_params.npy", allow_pickle=True)
 print("Quantum model parameters loaded.")
 
 #metadata = np.load("quantum_model_metadata.npy", allow_pickle=True).item()
@@ -14,8 +14,8 @@ def accuracy(params, X, Y):
     predictions = [variational_circuit(params, x) for x in X]
     predictions = np.sign(np.stack(predictions))
     return np.mean(predictions==Y)
-X_test = np.load("../data/processed/X_trainq.npy")
-y_test = np.load("../data/processed/y_trainq_tf.npy")
+X_test = np.load("/workspaces/ISEF2025-2027/data/processed/X_testq_tf.npy")
+y_test = np.load("/workspaces/ISEF2025-2027/data/processed/y_testq_tf.npy")
 y_test  = 2 * y_test  - 1
 n_qubits = 6
 
@@ -40,15 +40,13 @@ def variational_circuit(params, x):
     # params shape: (num_layers, n_qubits, 3)
     # Each qubit in each layer has 3 parameters for RX, RY, and RZ rotations
     for i_layer, layer_params in enumerate(params):
-        qml.AngleEmbedding(features = x_chunks[i_layer % len(x_chunks)], wires = range(n_qubits), rotation = 'Y')
-        for i, wire_params in enumerate(layer_params):
-            qml.RX(wire_params[0], wires=i)
-            qml.RY(wire_params[1], wires=i)
-            qml.RZ(wire_params[2], wires=i)
-
-        # Entangle the qubits with CNOT gates
-        for i in range(n_qubits - 1):
-            qml.CNOT(wires=[i, i+1])
+        #print("hello-----------------------------------------------")
+        qml.AngleEmbedding(features=x_chunks[i_layer % len(x_chunks)], wires=range(n_qubits), rotation='Y')# encoding 
+        #print("after angle embedding --------------------------------------------------------------------")
+        #for i, wire_params in enumerate(layer_params): # rotation
+        #    qml.RY(wire_params, wires=i)
+        #print(layer_params.shape)
+        qml.StronglyEntanglingLayers(weights=params, wires=range(6))
 
     # Measure expectation value of Pauli-Z on the first qubit
     return qml.expval(H)
