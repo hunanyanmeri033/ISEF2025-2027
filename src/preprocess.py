@@ -12,7 +12,7 @@ from imblearn.over_sampling import SMOTE
 from collections import Counter
 from sklearn.preprocessing import QuantileTransformer
 from sklearn.preprocessing import Normalizer
-csv_path = "/home/merih/ISEF2025-2026/data/raw/HIV.csv"
+csv_path = "/workspaces/ISEF2025-2027/data/raw/HIV.csv"
 df = pd.read_csv(csv_path)
 #df['smiles'] = pd.to_numeric(df['smiles'], errors='coerce')
 X_raw_series = df["smiles"]
@@ -144,20 +144,19 @@ print(X_train_scaled)
 #print(X_train_scaled.describe)
 #print(X_train_scaled.shape)
 #principal component analysis
-pca = PCA(n_components=6)
+#pca = PCA(n_components=6)
 
-X_trainq = pca.fit_transform(X_train_scaled)
-X_valq  = pca.transform(X_val_scaled)
-X_testq  = pca.transform(X_test_scaled)
-print(X_trainq)
+#X_trainq = pca.fit_transform(X_train_scaled)
+##X_valq  = pca.transform(X_val_scaled)
+#X_testq  = pca.transform(X_test_scaled)
 #transformer = Normalizer(norm='l2').fit(X_trainq)
 #X_trainq = transformer.transform(X_trainq)
 #transformer = Normalizer(norm='l2').fit(X_testq)
 #X_testq = transformer.transform(X_testq)
 
-X_train = X_trainq
-X_test = X_testq
-X_val = X_valq
+X_train = X_train_scaled
+X_test = X_test_scaled
+X_val = X_val_scaled
 y_train = ytrainsampled
 y_test = ytestsampled
 y_val = yvalsampled
@@ -172,9 +171,9 @@ y_train_tf = tf.convert_to_tensor(y_train, dtype = tf.float32)
 y_val_tf = tf.convert_to_tensor(y_val, dtype = tf.float32)
 y_test_tf = tf.convert_to_tensor(y_test, dtype = tf.float32)
 
-X_trainq_tf = tf.convert_to_tensor(X_trainq, dtype = tf.float32)
-X_valq_tf = tf.convert_to_tensor(X_valq, dtype = tf.float32)
-X_testq_tf = tf.convert_to_tensor(X_testq, dtype = tf.float32)
+X_trainq_tf = tf.convert_to_tensor(X_train, dtype = tf.float32)
+X_valq_tf = tf.convert_to_tensor(X_val, dtype = tf.float32)
+X_testq_tf = tf.convert_to_tensor(X_test, dtype = tf.float32)
 y_trainq_tf = tf.convert_to_tensor(ytrainsampled, dtype = tf.float32)
 y_valq_tf = tf.convert_to_tensor(yvalsampled, dtype = tf.float32)
 y_testq_tf = tf.convert_to_tensor(ytestsampled, dtype = tf.float32)
@@ -182,19 +181,19 @@ print(y_train)
 
 print(y_train_tf)
 
-np.save("../data/processed/X_train_tf.npy", X_train_tf)
-np.save("../data/processed/y_train_tf.npy", y_train_tf)
-np.save("../data/processed/X_val_tf.npy", X_val_tf)
-np.save("../data/processed/y_val_tf.npy", y_val_tf)
-np.save("../data/processed/X_test_tf.npy", X_test_tf)
-np.save("../data/processed/y_test_tf.npy", y_test_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_train_tf.npy", X_train_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_train_tf.npy", y_train_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_val_tf.npy", X_val_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_val_tf.npy", y_val_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_test_tf.npy", X_test_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_test_tf.npy", y_test_tf)
 
-np.save("../data/processed/X_trainq.npy", X_trainq_tf)
-np.save("../data/processed/X_valq.npy", X_valq_tf)
-np.save("../data/processed/X_testq.npy", X_testq_tf)
-np.save("../data/processed/y_trainq_tf.npy", y_trainq_tf)
-np.save("../data/processed/y_valq_tf.npy", y_valq_tf)
-np.save("../data/processed/y_testq_tf.npy", y_testq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_trainq_tf.npy", X_trainq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_valq_tf.npy", X_valq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/X_testq_tf.npy", X_testq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_trainq_tf.npy", y_trainq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_valq_tf.npy", y_valq_tf)
+np.save("/workspaces/ISEF2025-2027/data/processed/y_testq_tf.npy", y_testq_tf)
 
 print("--------------------DONE------------------------")
 
